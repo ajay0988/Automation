@@ -1,3 +1,38 @@
 FROM vimal13/apache-webserver-php
-RUN echo "<h1><center> 2nd Application running on docker container using nginx reverse proxy in ec2 instance solved the jenkin issue , solved the timeout issue </center></h1>" > /var/www/html/index.html
+RUN echo "<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Application 2</title>
+  <style>
+    body {
+      color: #ffffff;
+      background-color: #FF00FF;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    
+    h1 {
+      font-size: 500%;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+    
+    h2 {
+      font-size: 200%;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div align="center">
+    <h1>Congratulations Ajay</h1>
+    <h2>This is App 2 (v3) running inside docker container using nginx reverse proxy at VM.</h2>
+    <p>For any query connect to me on <a href="https://www.linkedin.com/in/ajay-kumar-yadav-87182b17b/">Linkedin</a>.</p>
+  </div>
+</body>
+</html>
+
+" > /var/www/html/index.html
 EXPOSE 80
