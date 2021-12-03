@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+sudo sed -i -e "s/\(PasswordAuthentication \).*/\1"yes"/" /etc/ssh/sshd_config
+sudo echo "ajay" | passwd root --stdin
+sudo systemctl restart sshd
