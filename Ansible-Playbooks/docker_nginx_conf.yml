@@ -1,0 +1,26 @@
+- hosts: all
+  tasks:
+   - name: "Copy the nginx repo file"
+     copy:
+       src: /ansible-ws/nginx.repo
+       dest: /etc/yum.repos.d/
+   - name: "Install the nginx"
+     package:
+             name: "nginx"
+             state: present
+   - name: "Copy the conf file nginx"
+     copy:
+             src: /ansible-ws/rev.conf
+             dest: /etc/nginx/conf.d/
+   - name: "Restart nginx"
+     service:
+        name: "nginx"
+        state: restarted
+   - name: "Install docker"
+     package:
+             name: "docker"
+             state: present
+   - name: "Start the docker service"
+     service:
+             name: "docker"
+             state: started
