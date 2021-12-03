@@ -1,0 +1,54 @@
+- hosts: all
+  tasks:
+   - name: "Create directory"
+     file:
+             path: /ws
+             state: directory
+   - name: "Sending the docker file 1"
+     copy:
+       src: '{{ item.src }}'
+       dest: /ws
+
+     loop:
+             - src: /ansible-ws/dockerfile1
+             - src: /ansible-ws/dockerfile2
+             - src: /ansible-ws/app1.html
+             - src: /ansible-ws/app2.html
+   - name: "Check app1:v1 image present or not"
+     command: docker images app1:v1
+     register: cmdapp1
+
+   - name: "Check app2:v1 image present or not"
+     command: docker images app2:v1
+     register: cmdapp2
+   - name: "Create docker image for first application"
+     shell: |
+             cd /ws
+             docker build -f dockerfile1 -t app1:v1 .
+             docker run --name app1 --rm -dit -p 83:80 app1:v1
+     when: cmdapp1.stdout_lines|length == 1
+   - name: "deploy the app1"
+     shell: |
+             cd /ws
+             docker rmi -f app1:v1
+             docker build -f dockerfile1 -t app1:v1 .
+             docker rm -f app1
+             docker run --name app1 --rm -dit -p 83:80 app1:v1
+     when: cmdapp1.stdout_lines|length > 1
+
+   - name: "Create docker image for sec application"
+     shell: |
+             cd /ws
+             docker build -f dockerfile2 -t app2:v1 .
+             docker run --name app2 --rm -dit -p 84:80 app2:v1
+     when: cmdapp2.stdout_lines|length == 1
+
+   - name: "deploy the app2"
+     shell: |
+             cd /ws
+             docker rmi -f app2:v1
+             docker build -f dockerfile2 -t app2:v1 .
+             docker rm -f app2
+             docker run --name app2 --rm -dit -p 84:80 app2:v1
+     when: cmdapp2.stdout_lines|length > 1
+
